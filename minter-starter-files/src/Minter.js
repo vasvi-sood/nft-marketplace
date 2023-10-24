@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { connectWallet, getCurrentWalletConnected } from "./utils/interact.js";
 import { pinFileToIPFS } from "./utils/pinata.js";
+const ethers = require("ethers");
 const fs = require("fs");
 const FormData = require("form-data");
 
@@ -8,8 +9,8 @@ const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const web3 = createAlchemyWeb3(alchemyKey);
 const contractABI = require("./contract-abi.json");
-const contractAddress = "0x6ebadc78c52df4c6b1cebeb70dea3737759f388f";
-
+// const contractAddress = "0x6ebadc78c52df4c6b1cebeb70dea3737759f388f";
+const contractAddress = "0xf4B2114f963A7537EC4a68B30Ed61C3D6A2a29a9";
 const Minter = (props) => {
   //State variables
   const [walletAddress, setWallet] = useState("");
@@ -34,35 +35,43 @@ const Minter = (props) => {
 
   const onMintPressed = async () => {
     console.log("here");
-    // if (url.trim() == "" || name.trim() == "" || description.trim() == "") {
-    //   return {
-    //     success: false,
-    //     status: "❗Please make sure all fields are completed before minting.",
-    //   };
-    // }
+    if (name.trim() == "" || description.trim() == "") {
+      return {
+        success: false,
+        status: "❗Please make sure all fields are completed before minting.",
+      };
+    }
     const metadata = new Object();
     metadata.name = name;
-    metadata.image = url;
+    // metadata.image = url;
     metadata.description = description;
-    metadata.external_url = "https://pinata.cloud";
+
     //make pinata call
-    const pinataResponse = await pinFileToIPFS(picture);
-    console.log(pinataResponse);
-    if (!pinataResponse.success) {
+    const response = await pinFileToIPFS(picture, metadata);
+    console.log(response);
+    if (!response) {
+      console.log("what");
       return {
         success: false,
         status: "😢 Something went wrong while uploading your tokenURI.",
       };
     }
-    const tokenURI = pinataResponse.pinataUrl;
+    const tokenURI = response.pinataResponse;
     console.log(tokenURI);
     window.contract = await new web3.eth.Contract(contractABI, contractAddress);
     //set up your Ethereum transaction
+    // const transactionParameters = {
+    //   to: contractAddress, // Required except during contract publications.
+    //   from: window.ethereum.selectedAddress, // must match user's active address.
+    //   data: window.contract.methods
+    //     .safeMint(window.ethereum.selectedAddress, tokenURI)
+    //     .encodeABI(), //make call to NFT smart contract
+    // };
     const transactionParameters = {
       to: contractAddress, // Required except during contract publications.
       from: window.ethereum.selectedAddress, // must match user's active address.
       data: window.contract.methods
-        .mintNFT(window.ethereum.selectedAddress, tokenURI)
+        .safeMint(window.ethereum.selectedAddress, tokenURI)
         .encodeABI(), //make call to NFT smart contract
     };
 
@@ -72,17 +81,19 @@ const Minter = (props) => {
         method: "eth_sendTransaction",
         params: [transactionParameters],
       });
-      return {
-        success: true,
-        status:
-          "✅ Check out your transaction on Etherscan: https://ropsten.etherscan.io/tx/" +
-          txHash,
-      };
+      console.log("success");
+      // return {
+      //   success: true,
+      //   status:
+      //     "✅ Check out your transaction on Etherscan: https://ropsten.etherscan.io/tx/" +
+      //     txHash,
+      // };
     } catch (error) {
-      return {
-        success: false,
-        status: "😥 Something went wrong: " + error.message,
-      };
+      console.log("error");
+      // return {
+      //   success: false,
+      //   status: "😥 Something went wrong: " + error.message,
+      // };
     }
   };
 
