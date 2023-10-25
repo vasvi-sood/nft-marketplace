@@ -20,9 +20,7 @@ export const pinFileToIPFS = async (formData, metadata) => {
         "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
       );
       cid = "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash;
-      console.log(
-        "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
-      );
+     
       const resp = await pinJSONToIPFS(metadata);
       return resp;
     })
@@ -39,6 +37,8 @@ const pinJSONToIPFS = async (metadata) => {
   const data = {
     name: metadata.name,
     description: metadata.description,
+    price:metadata.price,
+    username:metadata.username,
     image: cid,
   };
 
