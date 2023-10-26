@@ -32,7 +32,8 @@ const Minter = (props) => {
   };
 
   const onMintPressed = async () => {
-    console.log("on mint pressed");
+    console.log("on mint pressed",price);
+   
     if (
       name.trim() == "" ||
       description.trim() == "" ||
@@ -43,7 +44,13 @@ const Minter = (props) => {
       await setStatus(
         "❗Please make sure all fields are completed before minting."
       );
-    } else {
+    } 
+
+   else if(parseFloat(price)<=0)
+    await setStatus(
+      "❗Please enter price>0"
+    );
+    else {
       const metadata = new Object();
       metadata.name = name;
       metadata.description = description;

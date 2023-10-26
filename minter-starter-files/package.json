@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^14.5.1",
     "axios": "^1.5.1",
     "browserify-zlib": "^0.2.0",
+    "ethers": "^6.8.0",
     "fs-extra": "^11.1.1",
     "path": "^0.12.7",
     "react": "^18.2.0",

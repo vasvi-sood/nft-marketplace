@@ -6,8 +6,8 @@ function App() {
   return (
     <div className="App">
       <Minter></Minter>
-      <ViewNFT></ViewNFT>
-      <ViewNFTCollection></ViewNFTCollection>
+      {/* <ViewNFT></ViewNFT>
+      <ViewNFTCollection></ViewNFTCollection> */}
     </div>
   );
 }
