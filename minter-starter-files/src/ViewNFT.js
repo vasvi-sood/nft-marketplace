@@ -4,6 +4,8 @@ import {
   connectWallet,
   getCurrentWalletConnected,
   mintNFT,
+  viewNFT,
+  getcontractAddress,
 } from "./utils/interact.js";
 import { NFTCard } from "./NFTComponent.js";
 
@@ -35,6 +37,8 @@ const ViewNFT = () => {
 
   const fetchNFTs = async () => {
     await connectWalletPressed();
+    // let response = await viewNFT();
+    // console.log(response);
     let nfts;
     console.log("fetching nfts");
 
@@ -50,14 +54,23 @@ const ViewNFT = () => {
     //     nfts = await fetch(fetchURL, requestOptions).then(data => data.json())
     //   } else {
     console.log("fetching nfts for collection owned by address");
-    const fetchURL = `${baseURL}/getNFTs?owner=${walletAddress}&contractAddresses%5B%5D=0xb703D4b3d7341f7af7D11B2e1B5D1f5df6dD2237`;
+    console.log(walletAddress);
+    const fetchURL = `${baseURL}/getNFTs?owner=${walletAddress}&contractAddresses=0xA47f54F69d61C57558bc343c7472546046CCA0a3`;
     nfts = await fetch(fetchURL, requestOptions).then((data) => data.json());
     //   }
+    const contractaddress = getcontractAddress();
 
-    if (nfts) {
-      console.log("nfts:", nfts.ownedNfts);
-      setNFTs(nfts.ownedNfts);
+    let ownednft = [];
+    console.log(nfts.ownedNfts);
+    for (let i in nfts.ownedNfts) {
+      console.log(nfts.ownedNfts[i]);
+      // if (nfts.ownedNfts[i].address == contractaddress)
+       {
+        console.log("nfts:", nfts.ownedNfts[i]);
+        ownednft.push(nfts.ownedNfts[i]);
+      }
     }
+    setNFTs(ownednft);
   };
 
   return (

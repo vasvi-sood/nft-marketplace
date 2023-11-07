@@ -1,5 +1,9 @@
 import React, { useRef } from 'react';
+
 export const NFTCard = ({ nft }) => {
+  const executeSale=(id)=>{
+    console.log("Execute Sale clicked", id);
+  }
   return (
     <div className="w-1/4 flex flex-col ">
       <div className="rounded-md">
@@ -18,6 +22,9 @@ export const NFTCard = ({ nft }) => {
           <p className="text-gray-600">Description:{nft.description}</p>
           <p className="text-gray-600">Price:{nft.metadata.price}</p>
           <p className="text-gray-600">User Created:{nft.metadata.username}</p>
+          <button  onClick={() => {
+            executeSale(parseInt(nft.id.tokenId));
+          }}>Sell</button>
         </div>
       </div>
     </div>

@@ -50,7 +50,7 @@ const ViewNFT = () => {
     //     nfts = await fetch(fetchURL, requestOptions).then(data => data.json())
     //   } else {
     console.log("fetching all  nfts for collection owned ");
-    const fetchURL = `${baseURL}/getNFTsForCollection?contractAddress=0xb703D4b3d7341f7af7D11B2e1B5D1f5df6dD2237&withMetadata=true`;
+    const fetchURL = `${baseURL}/getNFTsForCollection?contractAddress=0xA47f54F69d61C57558bc343c7472546046CCA0a3&withMetadata=true`;
     nfts = await fetch(fetchURL, requestOptions).then((data) => data.json());
     //   }
 

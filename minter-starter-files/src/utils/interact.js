@@ -9,6 +9,9 @@ const contractABI = require("../contract-abi.json");
 // const contractAddress = "0xb703D4b3d7341f7af7D11B2e1B5D1f5df6dD2237"; //has safemint function, ust make caller minter
 const contractAddress = "0xA47f54F69d61C57558bc343c7472546046CCA0a3"; //new updated contract
 
+export const getcontractAddress = async () => {
+  return contractAddress;
+};
 export const connectWallet = async () => {
   if (window.ethereum) {
     try {
@@ -105,20 +108,20 @@ export const mintNFT = async (picture, metadata) => {
 
   // sign the transaction via Metamask
   try {
-    let tokenURI =
-      "https://beige-cheerful-dragon-779.mypinata.cloud/ipfs/QmSyAmrcYKMXxkSB1vcdTfKXj4SPGN3cawj1QoGHdJZpGw";
+    // let tokenURI =
+    //   "https://beige-cheerful-dragon-779.mypinata.cloud/ipfs/QmSyAmrcYKMXxkSB1vcdTfKXj4SPGN3cawj1QoGHdJZpGw";
 
     console.log("inside try");
-    let decprice=parseFloat(metadata.price)*100000000000000000;
-    let strprice=decprice.toString();
+    let decprice = parseFloat(metadata.price) * 100000000000000000;
+    let strprice = decprice.toString();
     let price = parseInt(strprice, 16);
-    let finalprice='0x'+price;
-    console.log(decprice,strprice,price,finalprice)
+    let finalprice = "0x" + price;
+    console.log(decprice, strprice, price, finalprice);
     window.contract = await new web3.eth.Contract(contractABI, contractAddress);
     const transactionParameters = {
       to: contractAddress, // Required except during contract publications.
       from: window.ethereum.selectedAddress, // must match user's active address.
-      value: "0x5AF3107A4000",
+      value: "0x5AF3107A4000", // list price
       data: window.contract.methods
         .createToken(tokenURI, finalprice)
         // .getListPrice()
@@ -166,4 +169,23 @@ export const mintNFT = async (picture, metadata) => {
   // } catch (e) {
   //   alert("Upload error" + e);
   // }
+};
+
+export const viewNFT = async () => {
+  console.log("view nft function");
+
+  try {
+    window.contract = await new web3.eth.Contract(contractABI, contractAddress);
+    const result = await window.contract.methods.getAllNFTs().call();
+    console.log("success", result);
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      status: "😥 Something went wrong: " + error.message,
+    };
+  }
 };
